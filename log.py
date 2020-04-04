@@ -52,9 +52,11 @@ def add_urlpass():
 def prnt_rec():
     pui.stack.setCurrentIndex(0)
     global gkey
+    print(gkey)
     client =conn()
-    db = client.Database.User_data
-    p=db.find_one({'_id':gkey})
+    db = client.Database.customers
+    p=db.find_one({'_id':str(gkey)})
+    print(p)
     urlis=p['url']
     uslis=p['user']
     plis=p['pass']
@@ -63,9 +65,18 @@ def prnt_rec():
     pui.table.setRowCount(len(urlis))
     i=0
     while(i<len(urlis)):
-        pui.table.setItem(i, 0, QtWidgets.QTableWidgetItem(f.decrypt(urlis[i].decode()).decode()))
-        pui.table.setItem(i, 1, QtWidgets.QTableWidgetItem(uslis[i]))
-        pui.table.setItem(i, 2, QtWidgets.QTableWidgetItem(plis[i]))
+        p=urlis[i]
+        q=uslis[i]
+        r=plis[i]
+        p=(f.decrypt(p[2:len(p)].encode())).decode()
+        q=(f.decrypt(q[2:len(q)].encode())).decode()    
+        r=(f.decrypt(r[2:len(r)].encode())).decode()
+        #p=p.encode()
+        #p= f.decrypt(p)
+        #p=p.decode()
+        pui.table.setItem(i, 0, QtWidgets.QTableWidgetItem(p))
+        pui.table.setItem(i, 1, QtWidgets.QTableWidgetItem(q))
+        pui.table.setItem(i, 2, QtWidgets.QTableWidgetItem(r))
         i+=1
 
 def add_ent():
@@ -107,7 +118,7 @@ ui.supButton.clicked.connect(add_ent)
 ui.sinButton.clicked.connect(chek_ent)
 pui.AddButton.clicked.connect(add_urlpass)
 pui.VSPButton.clicked.connect(prnt_rec)
-#ui.setWindowIcon(QtGui.QIcon("download.png"))
+ui.setWindowIcon(QtGui.QIcon("image.jpg"))
 #ui.setWindowTitle("Our calculator")
 
 ui.show()
